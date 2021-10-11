@@ -92,7 +92,7 @@ describe("NftyPass", function () {
     });
 
     describe("tokenURI", function () {
-        it("Should Reject Return correct tokenURI", async function () {
+        it("Should Return correct tokenURI", async function () {
             const value = await nftyPassContract.PRICE();
             await nftyPassContract
                 .connect(accounts[1])
