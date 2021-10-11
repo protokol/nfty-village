@@ -3,8 +3,8 @@ import { task } from "hardhat/config";
 
 import { NftyPass__factory } from "../typechain";
 
-task("create-collectibles", "Creates a new collectible item")
-    .addParam("supply", "Number of Tokens To Generate")
+task("create-passes", "Creates Nfty Passes")
+    .addParam("supply", "Number of Passes To Generate")
     .addOptionalParam("contract", "The address of the ERC721 contract")
     .setAction(async (taskArgs, hre) => {
         const contractAddr =
