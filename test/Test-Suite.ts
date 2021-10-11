@@ -21,17 +21,19 @@ describe("Token contract", function () {
     let addr2: SignerWithAddress;
     let addrs: SignerWithAddress[];
 
+    const uri = "www.placeholder.com/";
+
     // `beforeEach` will run before each test, re-deploying the contract every
     // time. It receives a callback, which can be async.
     beforeEach(async function () {
         // Get the ContractFactory and Signers here.
-        Token = await ethers.getContractFactory("NFTToken");
+        Token = await ethers.getContractFactory("NftyPass");
         [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 
         // To deploy our contract, we just have to call Token.deploy() and await
         // for it to be deployed(), which happens onces its transaction has been
         // mined.
-        hardhatToken = await Token.deploy();
+        hardhatToken = await Token.deploy(uri);
     });
 
     // You can nest describe calls to create subsections.
@@ -50,8 +52,8 @@ describe("Token contract", function () {
         });
 
         it("Should Set Initial Token Supply To Zero", async function () {
-            const factory = await ethers.getContractFactory("NFTToken");
-            const phd = await factory.deploy();
+            const factory = await ethers.getContractFactory("NftyPass");
+            const phd = await factory.deploy(uri);
             await phd.deployed();
 
             expect(await phd.totalSupply()).to.equal(0);

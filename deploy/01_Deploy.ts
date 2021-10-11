@@ -2,22 +2,22 @@ import { Signer } from "ethers";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-import { NFTToken, NFTToken__factory } from "../typechain";
+import { NftyPass, NftyPass__factory } from "../typechain";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     let accounts: Signer[];
-    let nftTokenContract: NFTToken;
+    let nftTokenContract: NftyPass;
 
     accounts = await hre.ethers.getSigners();
 
     console.log(await accounts[0].getAddress());
 
     const tokenFactory = (await hre.ethers.getContractFactory(
-        "NFTToken",
+        "NftyPass",
         accounts[0]
-    )) as NFTToken__factory;
+    )) as NftyPass__factory;
 
-    nftTokenContract = await tokenFactory.deploy();
+    nftTokenContract = await tokenFactory.deploy("www.placeholder.com/");
 
     console.log(
         `The address the Contract WILL have once mined: ${nftTokenContract.address}`
@@ -36,5 +36,5 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log("Minted...");
 };
 export default func;
-func.id = "nft_token_deploy";
+func.id = "deploy";
 func.tags = ["local"];
