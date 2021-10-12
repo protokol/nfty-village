@@ -45,7 +45,9 @@ module.exports = {
             //   url: MAINNET_RPC_URL
             // }
         },
-        localhost: {},
+        localhost: {
+            url: "http://127.0.0.1:8545",
+        },
         ropsten: {
             url: ROPSTEN_RPC_URL,
             // accounts: [PRIVATE_KEY],
