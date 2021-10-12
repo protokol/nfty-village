@@ -12,9 +12,7 @@ task("create-passes", "Creates Nfty Passes")
         console.log(
             `Creating ${supply} Passes via contract: ${contractAddr} on network ${hre.network.name}`
         );
-        const nftFactory = (await hre.ethers.getContractFactory(
-            "NftyPass"
-        ));
+        const nftFactory = await hre.ethers.getContractFactory("NftyPass");
 
         // Get signer information
         const accounts = await hre.ethers.getSigners();
@@ -25,7 +23,7 @@ task("create-passes", "Creates Nfty Passes")
             nftFactory.interface,
             signer
         );
-        const price = nftTokenContract.PRICE();
+        const price = await nftTokenContract.PRICE();
 
         for (let i = 0; i < supply; i++) {
             const createCollectibleTx = await nftTokenContract.safeMint(
