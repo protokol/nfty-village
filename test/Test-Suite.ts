@@ -1,8 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers";
+import { expect } from "chai";
 import { Contract } from "ethers";
 import { ethers } from "hardhat";
-
-import { expect } from "./chai-setup";
 
 describe("Token contract", function () {
     // Mocha has four functions that let you hook into the the test runner's

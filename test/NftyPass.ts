@@ -91,6 +91,35 @@ describe("NftyPass", function () {
         });
     });
 
+    describe("Base URI", function () {
+        it("Should update base uri", async function () {
+            const updatedBaseURI = "www.placeholder2.com/";
+            const address = await accounts[1].getAddress();
+            const value = await nftyPassContract.PRICE();
+            await nftyPassContract
+                .connect(accounts[1])
+                .safeMint(await accounts[1].getAddress(), { value });
+
+            const token = await nftyPassContract.tokenOfOwnerByIndex(
+                address,
+                0
+            );
+            const tokenURI = await nftyPassContract.tokenURI(token);
+            expect(tokenURI).to.contain(uri);
+
+            await nftyPassContract.setBaseURI(updatedBaseURI);
+
+            const updatedTokenURI = await nftyPassContract.tokenURI(token);
+            expect(updatedTokenURI).to.contain(updatedBaseURI);
+        });
+
+        it("Should throw an error if non owner try to update base uri", async function () {
+            expect(
+                nftyPassContract.connect(accounts[1]).setBaseURI("")
+            ).eventually.to.be.rejectedWith();
+        });
+    });
+
     describe("tokenURI", function () {
         it("Should Return correct tokenURI", async function () {
             const value = await nftyPassContract.PRICE();
