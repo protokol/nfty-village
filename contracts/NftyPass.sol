@@ -30,8 +30,6 @@ contract NftyPass is
     }
 
     function safeMint(address to) external payable whenNotPaused {
-        require(to != address(0), "Mint to the zero address");
-
         require(
             PRICE <= msg.value,
             "ETH amount is not sufficient"

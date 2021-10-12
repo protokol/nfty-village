@@ -74,7 +74,7 @@ describe("NftyPass", function () {
                     .safeMint("0x0000000000000000000000000000000000000000", {
                         value,
                     })
-            ).eventually.to.be.rejectedWith("Mint to the zero address");
+            ).eventually.to.be.rejectedWith("ERC721: mint to the zero address");
         });
 
         it("Should Reject if Contract is on pause", async function () {
