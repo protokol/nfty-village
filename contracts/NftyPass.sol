@@ -34,6 +34,7 @@ contract NftyPass is
             PRICE <= msg.value,
             "ETH amount is not sufficient"
         );
+        require(Counters.current(_tokenIdCounter) < MAX_TOKENS, "Maximum amount has been reached!");
         
         _safeMint(to, _tokenIdCounter.current());
         _tokenIdCounter.increment();
