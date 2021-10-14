@@ -136,48 +136,6 @@ describe("NftyPass", function () {
         });
     });
 
-    describe("burn", function () {
-        it("Should Accept if correct user burns it", async function () {
-            const value = await nftyPassContract.PRICE();
-            await nftyPassContract
-                .connect(accounts[1])
-                .safeMint(await accounts[1].getAddress(), {
-                    value,
-                });
-
-            // tslint:disable-next-line:no-unused-expression
-            expect(nftyPassContract.connect(accounts[1]).burn(0)).eventually.to
-                .be.fulfilled;
-        });
-
-        it("Should Reject because only owner can burn", async function () {
-            const value = await nftyPassContract.PRICE();
-            await nftyPassContract
-                .connect(accounts[1])
-                .safeMint(await accounts[2].getAddress(), {
-                    value,
-                });
-
-            expect(
-                nftyPassContract.connect(accounts[1]).burn(0)
-            ).eventually.to.be.rejectedWith();
-        });
-
-        it("Should Reject because contract is on pause", async function () {
-            const value = await nftyPassContract.PRICE();
-            await nftyPassContract
-                .connect(accounts[1])
-                .safeMint(await accounts[1].getAddress(), {
-                    value,
-                });
-            await nftyPassContract.connect(accounts[0]).pause();
-
-            expect(
-                nftyPassContract.connect(accounts[1]).burn(0)
-            ).eventually.to.be.rejectedWith();
-        });
-    });
-
     describe("Withdraw", function () {
         it("Should empty contract balance when withdrawing", async function () {
             const value = await nftyPassContract.PRICE();
