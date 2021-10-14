@@ -19,7 +19,7 @@ contract NftyPass is
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
     
-    uint256 public constant MAX_TOKENS = 4200;
+    uint256 public constant MAX_TOKENS = 9000;
     uint256 public constant PRICE = 0.05 ether;
     string private _passBaseURI = "";
 
