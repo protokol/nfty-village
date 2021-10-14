@@ -24,7 +24,7 @@ describe("NftyPass", function () {
         it("Should get MAX_TOKENS initialized in constructor", async function () {
             const maxTokens = await nftyPassContract.MAX_TOKENS();
 
-            expect(maxTokens).to.equal("4200");
+            expect(maxTokens).to.equal("9000");
         });
     });
 
