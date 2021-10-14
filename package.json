@@ -1,5 +1,5 @@
 {
-    "name": "typescript-eth-solidity-hardhat-template",
+    "name": "nfty-village",
     "version": "1.0.0",
     "description": "",
     "scripts": {
@@ -18,7 +18,10 @@
         "LICENSE",
         "README.md"
     ],
-    "author": "Kristjan Kosic <kristjan@protokol.com>",
+    "authors": [
+        "Zan Kovac <zan@protokol.com",
+        "Kristjan Kosic <kristjan@protokol.com>"
+    ],
     "license": "MIT",
     "devDependencies": {
         "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@0.3.0-beta.11",
@@ -30,10 +33,12 @@
         "@typechain/ethers-v5": "7.1.2",
         "@typechain/hardhat": "2.3.0",
         "@types/chai": "4.2.22",
+        "@types/chai-as-promised": "7.1.4",
         "@types/mocha": "9.0.0",
         "@types/node": "16.4.10",
         "babel-eslint": "10.1.0",
         "chai": "4.3.4",
+        "chai-as-promised": "^7.1.1",
         "chai-bignumber": "3.0.0",
         "chai-bn": "0.3.0",
         "chai-ethers": "0.0.1",

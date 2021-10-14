@@ -13,7 +13,7 @@ import "solidity-coverage";
 import "./tasks/accounts";
 import "./tasks/balance";
 import "./tasks/block-number";
-import "./tasks/create-collectibles";
+import "./tasks/create-passes";
 
 const MAINNET_RPC_URL =
     process.env.MAINNET_RPC_URL ||
@@ -25,6 +25,9 @@ const RINKEBY_RPC_URL =
 const KOVAN_RPC_URL =
     process.env.KOVAN_RPC_URL ||
     "https://eth-kovan.alchemyapi.io/v2/your-api-key";
+const ROPSTEN_RPC_URL =
+    process.env.ROPSTEN_RPC_URL ||
+    "https://eth-ropsten.alchemyapi.io/v2/your-api-key";
 const MNEMONIC = process.env.MNEMONIC || "your mnemonic";
 const ETHERSCAN_API_KEY =
     process.env.ETHERSCAN_API_KEY || "Your etherscan API key";
@@ -42,7 +45,19 @@ module.exports = {
             //   url: MAINNET_RPC_URL
             // }
         },
-        localhost: {},
+        localhost: {
+            url: "http://127.0.0.1:8545",
+        },
+        ropsten: {
+            url: ROPSTEN_RPC_URL,
+            // accounts: [PRIVATE_KEY],
+            accounts: {
+                mnemonic: MNEMONIC,
+            },
+            saveDeployments: true,
+            gas: 2100000,
+            gasPrice: 8000000000,
+        },
         kovan: {
             url: KOVAN_RPC_URL,
             // accounts: [PRIVATE_KEY],
