@@ -24,7 +24,7 @@ describe("NftyPass", function () {
         it("Should get MAX_TOKENS initialized in constructor", async function () {
             const maxTokens = await nftyPassContract.MAX_TOKENS();
 
-            expect(maxTokens).to.equal("4200");
+            expect(maxTokens).to.equal("9000");
         });
     });
 
@@ -133,48 +133,6 @@ describe("NftyPass", function () {
                 .tokenURI(0);
 
             expect(tokenURI).to.be.eq(`www.placeholder.com/${0}`);
-        });
-    });
-
-    describe("burn", function () {
-        it("Should Accept if correct user burns it", async function () {
-            const value = await nftyPassContract.PRICE();
-            await nftyPassContract
-                .connect(accounts[1])
-                .safeMint(await accounts[1].getAddress(), {
-                    value,
-                });
-
-            // tslint:disable-next-line:no-unused-expression
-            expect(nftyPassContract.connect(accounts[1]).burn(0)).eventually.to
-                .be.fulfilled;
-        });
-
-        it("Should Reject because only owner can burn", async function () {
-            const value = await nftyPassContract.PRICE();
-            await nftyPassContract
-                .connect(accounts[1])
-                .safeMint(await accounts[2].getAddress(), {
-                    value,
-                });
-
-            expect(
-                nftyPassContract.connect(accounts[1]).burn(0)
-            ).eventually.to.be.rejectedWith();
-        });
-
-        it("Should Reject because contract is on pause", async function () {
-            const value = await nftyPassContract.PRICE();
-            await nftyPassContract
-                .connect(accounts[1])
-                .safeMint(await accounts[1].getAddress(), {
-                    value,
-                });
-            await nftyPassContract.connect(accounts[0]).pause();
-
-            expect(
-                nftyPassContract.connect(accounts[1]).burn(0)
-            ).eventually.to.be.rejectedWith();
         });
     });
 

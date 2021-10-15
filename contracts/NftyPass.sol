@@ -6,20 +6,18 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract NftyPass is
     ERC721,
     ERC721Enumerable,
     Pausable,
-    Ownable,
-    ERC721Burnable
+    Ownable
 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
     
-    uint256 public constant MAX_TOKENS = 4200;
+    uint256 public constant MAX_TOKENS = 9000;
     uint256 public constant PRICE = 0.05 ether;
     string private _passBaseURI = "";
 
@@ -58,14 +56,6 @@ contract NftyPass is
         uint256 tokenId
     ) internal override(ERC721, ERC721Enumerable) whenNotPaused {
         super._beforeTokenTransfer(from, to, tokenId);
-    }
-
-    function _burn(uint256 tokenId)
-        internal
-        override
-        whenNotPaused
-    {
-        super._burn(tokenId);
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
