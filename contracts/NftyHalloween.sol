@@ -41,7 +41,7 @@ contract NftyHalloween is
     }
 
     function setBaseURI(string memory baseURI) external onlyOwner {
-        _nftyBaseURI = baseURI;
+        nftyBaseURI = baseURI;
     }
 
     function pause() external onlyOwner {
@@ -68,7 +68,7 @@ contract NftyHalloween is
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
-        return _nftyBaseURI;
+        return nftyBaseURI;
     }
 
     function supportsInterface(bytes4 interfaceId)
