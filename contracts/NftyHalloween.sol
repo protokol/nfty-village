@@ -16,18 +16,18 @@ contract NftyHalloween is
     ERC721CustomEnumerable
 {
     uint256 public constant MAX_TOKENS = 9000;
-    string private _nftyBaseURI = "";
+    string private nftyBaseURI = "";
     IERC721 public nftyPass;
 
     mapping(uint256 => address) private claimed;
     
     constructor(
-        string memory baseURI,  
+        string memory _nftyBaseURI,  
         address _nftyPass
     ) ERC721("NftyHalloween", "NFTYH")
     RandomlyAssigned(MAX_TOKENS, 0)
     {
-        _nftyBaseURI = baseURI;
+        nftyBaseURI = _nftyBaseURI;
         nftyPass = IERC721(_nftyPass);
     }
 
