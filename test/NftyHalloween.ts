@@ -3,10 +3,6 @@ import { Signer } from "ethers";
 import { ethers, web3 } from "hardhat";
 
 import {
-    MockChainlinkCoordinator,
-    MockChainlinkCoordinator__factory,
-    MockERC20,
-    MockERC20__factory,
     NftyHalloween,
     NftyHalloween__factory,
     NftyPass,
@@ -16,31 +12,12 @@ import {
 describe("Nfty Halloween", function () {
     let accounts: Signer[];
     const uri = "www.placeholder.com/";
-    const linkFeeAmount = web3.utils.toWei("1", "ether");
 
-    let chainLinkCoordinator: MockChainlinkCoordinator;
-    let linkToken: MockERC20;
     let passContract: NftyPass;
     let halloweenContract: NftyHalloween;
 
     beforeEach(async function () {
         accounts = await ethers.getSigners();
-
-        const chainLinkCoordinatorFactory = (await ethers.getContractFactory(
-            "MockChainlinkCoordinator",
-            accounts[0]
-        )) as MockChainlinkCoordinator__factory;
-        chainLinkCoordinator = await chainLinkCoordinatorFactory.deploy();
-
-        const linkTokenFactory = (await ethers.getContractFactory(
-            "MockERC20",
-            accounts[0]
-        )) as MockERC20__factory;
-        linkToken = await linkTokenFactory.deploy(
-            "LINK",
-            "LINK",
-            web3.utils.toWei("2", "ether")
-        );
 
         const passFactory = (await ethers.getContractFactory(
             "NftyPass",
@@ -54,13 +31,17 @@ describe("Nfty Halloween", function () {
         )) as NftyHalloween__factory;
         halloweenContract = await halloweenFactory.deploy(
             uri,
-            passContract.address,
-            linkToken.address,
-            chainLinkCoordinator.address,
-            linkFeeAmount,
-            "0x0000000000000000000000000000000000000000000000000000000000000000"
+            passContract.address
         );
     });
+
+    describe("Init", function () {
+        it("Should set max token supply", async function () {
+            const maxTokens = await halloweenContract.MAX_TOKENS();
+            expect(await halloweenContract.totalSupply()).to.equal(maxTokens);
+        });
+    });
+
     describe("Mint", function () {
         beforeEach(async () => {
             const value = await passContract.PRICE();
@@ -76,13 +57,28 @@ describe("Nfty Halloween", function () {
             });
         });
         it("Should Mint successfully", async function () {
-            expect(await halloweenContract.totalSupply()).to.equal(0);
+            expect(await halloweenContract.tokenCount()).to.equal(0);
 
             await halloweenContract.connect(accounts[0]).mint(0);
-            await halloweenContract.connect(accounts[1]).mint(1);
-            await halloweenContract.connect(accounts[2]).mint(2);
+            expect(await halloweenContract.claimedPass(0)).to.equal(
+                await accounts[0].getAddress()
+            );
 
-            expect(await halloweenContract.totalSupply()).to.equal(3);
+            await halloweenContract.connect(accounts[1]).mint(1);
+            expect(await halloweenContract.claimedPass(1)).to.equal(
+                await accounts[1].getAddress()
+            );
+
+            await halloweenContract.connect(accounts[2]).mint(2);
+            expect(await halloweenContract.claimedPass(2)).to.equal(
+                await accounts[2].getAddress()
+            );
+
+            expect(await halloweenContract.tokenCount()).to.equal(3);
+
+            expect(
+                halloweenContract.claimedPass(3)
+            ).eventually.to.be.rejectedWith("Pass not claimed");
         });
 
         it("Should Throw Pass not owned by sender", async function () {
@@ -127,112 +123,25 @@ describe("Nfty Halloween", function () {
                 halloweenContract.connect(accounts[1]).mint(0)
             ).eventually.to.be.rejectedWith("Pass already used");
         });
-    });
 
-    describe("reveal", () => {
-        const randomId = "991122334455667788990011223344556677889900";
-        beforeEach(async () => {
-            await linkToken.transfer(halloweenContract.address, linkFeeAmount);
-        });
-
-        it("Should reveal successfully", async () => {
-            await halloweenContract.connect(accounts[0]).seedReveal();
-
-            await chainLinkCoordinator.sendRandom(
-                halloweenContract.address,
-                randomId
-            );
-
-            assert.equal((await halloweenContract.seed()).toString(), randomId);
-        });
-
-        it("Should not be able to reveal two times", async () => {
-            await halloweenContract.connect(accounts[0]).seedReveal();
-            await chainLinkCoordinator.sendRandom(
-                halloweenContract.address,
-                randomId
-            );
+        it("Should Reject because pass not owned by sender even if its approved", async function () {
+            await passContract
+                .connect(accounts[0])
+                .approve(await accounts[1].getAddress(), 0);
 
             expect(
-                halloweenContract.connect(accounts[0]).seedReveal()
-            ).eventually.to.be.rejectedWith("Sead already generated");
+                halloweenContract.connect(accounts[1]).mint(0)
+            ).eventually.to.be.rejectedWith("Pass not owned by sender");
         });
 
-        it("Should not be able to sendRandom two times", async () => {
-            await halloweenContract.connect(accounts[0]).seedReveal();
-            await chainLinkCoordinator.sendRandom(
-                halloweenContract.address,
-                randomId
-            );
+        it("Should Reject because pass not owned by sender even if its approved for all", async function () {
+            await passContract
+                .connect(accounts[0])
+                .setApprovalForAll(await accounts[1].getAddress(), true);
 
             expect(
-                chainLinkCoordinator
-                    .connect(accounts[0])
-                    .sendRandom(halloweenContract.address, randomId)
-            ).eventually.to.be.rejectedWith("Sead already generated");
-        });
-    });
-
-    describe("metadataOf and tokenURI", () => {
-        beforeEach(async () => {
-            await linkToken.transfer(halloweenContract.address, linkFeeAmount);
-
-            const randomId = "991122334455667788990011223344556677889900";
-            await halloweenContract.seedReveal({
-                from: await accounts[0].getAddress(),
-            });
-            await chainLinkCoordinator.sendRandom(
-                halloweenContract.address,
-                randomId
-            );
-
-            const value = await passContract.PRICE();
-
-            await passContract.safeMint(await accounts[0].getAddress(), {
-                value,
-            });
-            await passContract.safeMint(await accounts[1].getAddress(), {
-                value,
-            });
-            await passContract.safeMint(await accounts[2].getAddress(), {
-                value,
-            });
-
-            await halloweenContract.connect(accounts[0]).mint(0);
-            await halloweenContract.connect(accounts[1]).mint(1);
-            await halloweenContract.connect(accounts[2]).mint(2);
-        });
-        it("Should return correct metadata", async () => {
-            // TODO make sure to check for expected values
-            assert.equal(await halloweenContract.metadataOf(0), "537");
-            assert.equal(
-                await halloweenContract.tokenURI(0),
-                "www.placeholder.com/537"
-            );
-
-            assert.equal(await halloweenContract.metadataOf(1), "1688");
-            assert.equal(
-                await halloweenContract.tokenURI(1),
-                "www.placeholder.com/1688"
-            );
-
-            assert.equal(await halloweenContract.metadataOf(2), "7198");
-            assert.equal(
-                await halloweenContract.tokenURI(2),
-                "www.placeholder.com/7198"
-            );
-        });
-
-        it("Should Throw if token doesn't yet exits", async () => {
-            expect(
-                halloweenContract.metadataOf(3)
-            ).eventually.to.be.rejectedWith();
-        });
-
-        it("Should Throw Invalid token id", async () => {
-            expect(
-                halloweenContract.metadataOf(9001)
-            ).eventually.to.be.rejectedWith("Invalid token id");
+                halloweenContract.connect(accounts[1]).mint(0)
+            ).eventually.to.be.rejectedWith("Pass not owned by sender");
         });
     });
 });
