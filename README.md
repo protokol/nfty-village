@@ -94,23 +94,31 @@ NFTY_PASS_BASE_URL=www.placeholder.com/
 ```
 
 #### Deployment
+
+First argument is Contract address that was deployed and the second one is base url
+that was used in deployment.
 ```sh
 hh deploy --tags pass --network rinkeby
 
 hh verify <CONTRACT-ADDRESS> "www.placeholder.com/" --network rinkeby
 ```
 
-The ABI json file which is needed by the GUI to interect with smart contract is located
+The ABI json file which is needed by the GUI to interact with smart contract is located
 at `./abi/contracts/NftyPass/NftyPass.json`
 
 ### Deploying Nfty Halloween set
-To deploy Halloween set we will have set Pass Contract Address and base url
+To deploy Halloween set we will have set NftyPass Contract Address and base url
 
 ```dosini
 NFTY_HALLOWEEN_BASE_URL=www.placeholder2.com/
-NFTY_HALLOWEEN_PASS_ADDRESS=0xbe715eBA71324CE2277144D09aFe678c881B6615
+NFTY_HALLOWEEN_NFTY_PASS_ADDRESS=0xbe715eBA71324CE2277144D09aFe678c881B6615
 ```
 
+First argument is contract address.
+
+Second argument is `NFTY_HALLOWEEN_BASE_URL`
+
+Third argument is `NFTY_HALLOWEEN_NFTY_PASS_ADDRESS`
 ```sh
 hh deploy --tags halloween --network rinkeby
 
