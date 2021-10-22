@@ -7,6 +7,7 @@ import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-solhint";
 import "@typechain/hardhat";
 import "dotenv/config";
+import "hardhat-abi-exporter";
 import "hardhat-deploy";
 import "solidity-coverage";
 
@@ -104,5 +105,11 @@ module.exports = {
     },
     mocha: {
         timeout: 100000,
+    },
+    abiExporter: {
+        path: "./abi",
+        clear: true,
+        flat: false,
+        spacing: 2,
     },
 };

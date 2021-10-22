@@ -18,8 +18,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     )) as NftyHalloween__factory;
 
     nftTokenContract = await tokenFactory.deploy(
-        "www.placeholder.com/",
-        "0xBB21DE52AF8d8db738D967C688CEB90FBdAa30C3"
+        process.env.NFTY_HALLOWEEN_BASE_URL || "www.placeholder.com/",
+        process.env.NFTY_HALLOWEEN_PASS_ADDRESS ||
+            "0xBB21DE52AF8d8db738D967C688CEB90FBdAa30C3"
     );
 
     console.log(
