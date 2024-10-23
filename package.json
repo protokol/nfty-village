@@ -36,7 +36,7 @@
         "@types/chai": "4.2.22",
         "@types/chai-as-promised": "7.1.4",
         "@types/mocha": "9.0.0",
-        "@types/node": "16.4.10",
+        "@types/node": "16.18.115",
         "babel-eslint": "10.1.0",
         "chai": "4.3.4",
         "chai-as-promised": "7.1.1",
